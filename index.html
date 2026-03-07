@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HUgo Barber</title>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
@@ -167,7 +166,6 @@
         .step {
             display: none;
             padding: 25px 20px;
-            padding-bottom: 180px;
             animation: slideUp 0.4s ease;
             max-width: 600px;
             margin: 0 auto;
@@ -180,6 +178,19 @@
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* STEP SERVICES - COM ESPAÇO PARA A FAIXA */
+        #step-services {
+            padding-bottom: 160px; /* Espaço para a faixa branca */
+        }
+        
+        /* OUTRAS STEPS - SEM FAIXA, ESPAÇO NORMAL */
+        #step-calendar,
+        #step-data,
+        #step-success,
+        #step-appointments {
+            padding-bottom: 120px; /* Só espaço para o menu inferior */
         }
         
         .step-header {
@@ -292,17 +303,17 @@
             font-size: 13px;
         }
         
-        /* SELECTION BAR - FIXADA ACIMA DO MENU */
+        /* SELECTION BAR - APENAS NA TELA DE SERVIÇOS */
         .selection-bar {
             position: fixed;
-            bottom: 80px;
+            bottom: 90px; /* Acima do menu */
             left: 20px;
             right: 20px;
             background: rgba(245, 245, 245, 0.98);
             color: var(--preto);
             padding: 18px 25px;
             border-radius: 20px;
-            display: none;
+            display: none; /* Escondida por padrão */
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 10px 40px rgba(0,0,0,0.4);
@@ -312,8 +323,19 @@
             margin: 0 auto;
         }
         
+        /* Mostra a faixa SÓ quando a step-services está ativa */
+        #step-services.active ~ .selection-bar,
+        #step-services.active .selection-bar,
         .selection-bar.active {
             display: flex;
+        }
+        
+        /* Força esconder em outras telas */
+        #step-calendar.active ~ .selection-bar,
+        #step-data.active ~ .selection-bar,
+        #step-success.active ~ .selection-bar,
+        #step-appointments.active ~ .selection-bar {
+            display: none !important;
         }
         
         .selection-info {
@@ -1170,15 +1192,6 @@
             </div>
         </div>
 
-        <!-- SELECTION BAR -->
-        <div class="selection-bar" id="selectionBar">
-            <div class="selection-info">
-                <div class="selection-count" id="selectionCount">0 serviços</div>
-                <div class="selection-price" id="selectionPrice">R$ 0,00</div>
-            </div>
-            <button class="btn-continue" onclick="goToCalendar()">Continuar</button>
-        </div>
-
         <!-- STEP 2: CALENDAR -->
         <div class="step" id="step-calendar">
             <div class="step-header">
@@ -1273,6 +1286,15 @@
             <button class="btn-primary" onclick="newBooking()" style="margin-top: 10px;">Novo Agendamento</button>
         </div>
 
+        <!-- SELECTION BAR - FORA DAS STEPS, APARECE SÓ EM SERVIÇOS -->
+        <div class="selection-bar" id="selectionBar">
+            <div class="selection-info">
+                <div class="selection-count" id="selectionCount">0 serviços</div>
+                <div class="selection-price" id="selectionPrice">R$ 0,00</div>
+            </div>
+            <button class="btn-continue" onclick="goToCalendar()">Continuar</button>
+        </div>
+
         <!-- BOTTOM NAV -->
         <div class="bottom-nav">
             <button class="nav-item active" onclick="switchNav('services')">
@@ -1346,7 +1368,7 @@
     </div>
 
     <script>
-        // FIREBASE CONFIG - BANCO DE DADOS REAL
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDummyKeyForDemo123456789",
             authDomain: "hugo-barber-demo.firebaseapp.com",
@@ -1357,7 +1379,6 @@
             appId: "1:123456789:web:abcdef123456"
         };
         
-        // INICIALIZA FIREBASE
         let app, database, bookingsRef;
         let allBookings = [];
         let selectedServices = [];
@@ -1373,28 +1394,23 @@
             '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
         ];
         
-        // INIT
         window.onload = function() {
             myClientId = getClientId();
             
-            // Tenta conectar ao Firebase
             try {
                 app = firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
                 bookingsRef = database.ref('bookings');
                 
-                // Escuta mudanças em tempo real
                 bookingsRef.on('value', (snapshot) => {
                     const data = snapshot.val();
                     allBookings = data ? Object.values(data) : [];
                     updateConnectionStatus(true);
                     
-                    // Se estiver na tela de horários, atualiza
                     if (selectedDate && document.getElementById('step-calendar').classList.contains('active')) {
                         renderTimeSlots();
                     }
                     
-                    // Se admin estiver aberto, atualiza
                     if (isAdmin) {
                         renderAdminPanel();
                     }
@@ -1403,7 +1419,6 @@
             } catch(e) {
                 console.log('Firebase não configurado, usando localStorage');
                 updateConnectionStatus(false);
-                // Fallback para localStorage
                 allBookings = JSON.parse(localStorage.getItem('hugo_bookings_backup') || '[]');
             }
             
@@ -1428,7 +1443,6 @@
             }
         }
         
-        // SERVICES
         function toggleService(id, price, name) {
             const index = selectedServices.findIndex(s => s.id === id);
             const element = document.querySelector(`[onclick="toggleService('${id}', ${price}, '${name}')"]`);
@@ -1449,7 +1463,10 @@
             const count = document.getElementById('selectionCount');
             const price = document.getElementById('selectionPrice');
             
-            if (selectedServices.length > 0) {
+            // Só mostra a faixa se estiver na tela de serviços e tiver seleção
+            const isServicesActive = document.getElementById('step-services').classList.contains('active');
+            
+            if (selectedServices.length > 0 && isServicesActive) {
                 const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
                 count.textContent = `${selectedServices.length} serviço${selectedServices.length > 1 ? 's' : ''}`;
                 price.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
@@ -1461,15 +1478,18 @@
         
         function goToCalendar() {
             if (selectedServices.length === 0) return;
+            // Esconde a faixa ao mudar de tela
+            document.getElementById('selectionBar').classList.remove('active');
             showStep('calendar');
             renderCalendar();
         }
         
         function backToServices() {
             showStep('services');
+            // Mostra a faixa novamente se tiver seleção
+            updateSelectionBar();
         }
         
-        // CALENDAR
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             const monthNames = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 
@@ -1521,7 +1541,6 @@
             renderTimeSlots();
         }
         
-        // TIME SLOTS - COM DADOS EM TEMPO REAL
         function renderTimeSlots() {
             const section = document.getElementById('timeSection');
             const grid = document.getElementById('timeGrid');
@@ -1534,7 +1553,6 @@
             
             const dateStr = selectedDate.toDateString();
             
-            // FILTRA HORÁRIOS OCUPADOS DO BANCO GLOBAL
             const bookedTimes = allBookings
                 .filter(b => b.date === dateStr && b.status === 'active')
                 .map(b => b.time);
@@ -1582,7 +1600,6 @@
             renderTimeSlots();
         }
         
-        // CONFIRM BOOKING
         async function confirmBooking() {
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
@@ -1594,7 +1611,6 @@
             
             showLoading(true);
             
-            // Verifica se horário ainda está livre
             const dateStr = selectedDate.toDateString();
             const isTimeTaken = allBookings.some(b => 
                 b.date === dateStr && b.time === selectedTime && b.status === 'active'
@@ -1623,16 +1639,13 @@
             };
             
             try {
-                // Salva no Firebase
                 if (bookingsRef) {
                     await bookingsRef.child(booking.id).set(booking);
                 } else {
-                    // Fallback localStorage
                     allBookings.push(booking);
                     localStorage.setItem('hugo_bookings_backup', JSON.stringify(allBookings));
                 }
                 
-                // Salva referência local
                 const myAppointments = getMyAppointments();
                 myAppointments.push(booking);
                 localStorage.setItem(`hugo_my_${myClientId}`, JSON.stringify(myAppointments));
@@ -1677,7 +1690,6 @@
             }
         }
         
-        // APPOINTMENTS
         function renderMyAppointmentsList() {
             const container = document.getElementById('appointmentsList');
             let appointments = getMyAppointments()
@@ -1728,12 +1740,10 @@
             showLoading(true);
             
             try {
-                // Atualiza no Firebase
                 if (bookingsRef) {
                     await bookingsRef.child(id).update({ status: 'cancelled' });
                 }
                 
-                // Atualiza local
                 let mine = getMyAppointments();
                 mine = mine.map(a => a.id === id ? { ...a, status: 'cancelled' } : a);
                 localStorage.setItem(`hugo_my_${myClientId}`, JSON.stringify(mine));
@@ -1776,10 +1786,18 @@
             showStep('services');
         }
         
-        // NAVIGATION
         function showStep(step) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Controla visibilidade da faixa de seleção
+            const selectionBar = document.getElementById('selectionBar');
+            if (step === 'services' && selectedServices.length > 0) {
+                selectionBar.classList.add('active');
+            } else {
+                selectionBar.classList.remove('active');
+            }
+            
             window.scrollTo(0, 0);
         }
         
@@ -1787,8 +1805,15 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             event.currentTarget.classList.add('active');
             
+            // Sempre esconde a faixa ao trocar de aba pelo menu
+            document.getElementById('selectionBar').classList.remove('active');
+            
             if (nav === 'services') {
                 showStep('services');
+                // Mostra faixa se tiver seleção
+                if (selectedServices.length > 0) {
+                    document.getElementById('selectionBar').classList.add('active');
+                }
             } else if (nav === 'appointments') {
                 renderMyAppointmentsList();
                 showStep('appointments');
@@ -1798,6 +1823,7 @@
         function goToAppointments() {
             document.querySelectorAll('.nav-item')[1].classList.add('active');
             document.querySelectorAll('.nav-item')[0].classList.remove('active');
+            document.getElementById('selectionBar').classList.remove('active');
             renderMyAppointmentsList();
             showStep('appointments');
         }
@@ -1818,7 +1844,6 @@
             showStep('services');
         }
         
-        // ADMIN
         function openAdminLogin() {
             document.getElementById('adminLoginModal').classList.add('active');
         }
