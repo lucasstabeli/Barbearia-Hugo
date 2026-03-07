@@ -145,7 +145,7 @@
         .step {
             display: none;
             padding: 25px 20px;
-            padding-bottom: 120px;
+            padding-bottom: 140px; /* Aumentado para não tampar */
             animation: slideUp 0.4s ease;
             max-width: 600px;
             margin: 0 auto;
@@ -178,7 +178,7 @@
             letter-spacing: 1px;
         }
         
-        /* SERVICES */
+        /* SERVICES - CORRIGIDO ALINHAMENTO */
         .services-list {
             display: flex;
             flex-direction: column;
@@ -189,7 +189,7 @@
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px;
-            padding: 22px;
+            padding: 22px 25px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -224,24 +224,36 @@
             background: var(--branco);
         }
         
+        /* ALINHAMENTO CORRIGIDO */
+        .service-left {
+            flex: 1;
+        }
+        
         .service-info h3 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 400;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 4px;
+        }
+        
+        .service-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
         
         .service-price {
-            font-size: 26px;
+            font-size: 20px;
             font-weight: 300;
             color: var(--branco);
             letter-spacing: 1px;
+            min-width: 90px; /* Largura fixa para alinhar */
+            text-align: right;
         }
         
         .service-check {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border: 2px solid rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
@@ -249,16 +261,17 @@
             justify-content: center;
             transition: all 0.3s;
             font-size: 0;
+            flex-shrink: 0;
         }
         
         .service-card.selected .service-check {
             background: var(--branco);
             border-color: var(--branco);
             color: var(--preto);
-            font-size: 14px;
+            font-size: 13px;
         }
         
-        /* SELECTION BAR */
+        /* SELECTION BAR - CORRIGIDO */
         .selection-bar {
             position: fixed;
             bottom: 90px;
@@ -266,7 +279,7 @@
             right: 20px;
             background: rgba(245, 245, 245, 0.98);
             color: var(--preto);
-            padding: 20px 25px;
+            padding: 18px 25px;
             border-radius: 20px;
             display: none;
             align-items: center;
@@ -283,18 +296,18 @@
         .selection-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
         
         .selection-count {
-            font-size: 13px;
+            font-size: 12px;
             opacity: 0.7;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
         .selection-price {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
         }
         
@@ -302,10 +315,10 @@
             background: var(--preto);
             color: var(--branco);
             border: none;
-            padding: 14px 28px;
+            padding: 12px 24px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
@@ -439,6 +452,8 @@
             opacity: 0.2;
             cursor: not-allowed;
             text-decoration: line-through;
+            background: rgba(255,0,0,0.05);
+            border-color: rgba(255,0,0,0.1);
         }
         
         /* FORM */
@@ -597,20 +612,20 @@
         }
         
         .appointment-card.completed {
-            opacity: 0.5;
+            opacity: 0.4;
         }
         
         .appointment-card.completed::after {
-            content: 'CONCLUÍDO';
+            content: 'FEITO';
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            border: 2px solid rgba(255,255,255,0.3);
-            padding: 10px 30px;
-            font-size: 20px;
-            letter-spacing: 5px;
-            color: rgba(255,255,255,0.4);
+            transform: translate(-50%, -50%) rotate(-10deg);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 8px 25px;
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.3);
             pointer-events: none;
         }
         
@@ -943,7 +958,6 @@
             font-size: 12px;
         }
         
-        /* SCROLLBAR */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -968,10 +982,8 @@
 
     <!-- APP -->
     <div class="app" id="app">
-        <!-- ADMIN TRIGGER -->
         <div class="admin-trigger" onclick="openAdminLogin()"></div>
 
-        <!-- HEADER -->
         <div class="header">
             <h1><span>HU</span>go</h1>
             <p>Barber Shop</p>
@@ -986,75 +998,111 @@
             
             <div class="services-list">
                 <div class="service-card" onclick="toggleService('corte', 30, 'Corte')">
-                    <div class="service-info">
-                        <h3>Corte</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Corte</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 30,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 30,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('navalhado', 30, 'Navalhado')">
-                    <div class="service-info">
-                        <h3>Navalhado</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Navalhado</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 30,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 30,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('barba', 30, 'Barba')">
-                    <div class="service-info">
-                        <h3>Barba</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Barba</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 30,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 30,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('sombra', 5, 'Sombra')">
-                    <div class="service-info">
-                        <h3>Sombra</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Sombra</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 5,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 5,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('cortebarba', 55, 'Corte + Barba')">
-                    <div class="service-info">
-                        <h3>Corte + Barba</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Corte + Barba</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 55,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 55,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('paifilho', 55, 'Pai & Filho')">
-                    <div class="service-info">
-                        <h3>Pai & Filho</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Pai & Filho</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 55,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 55,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('alisamento', 50, 'Alisamento')">
-                    <div class="service-info">
-                        <h3>Alisamento</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Alisamento</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 50,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 50,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('luzes', 100, 'Luzes')">
-                    <div class="service-info">
-                        <h3>Luzes</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Luzes</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 100,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 100,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
                 
                 <div class="service-card" onclick="toggleService('platinado', 120, 'Platinado')">
-                    <div class="service-info">
-                        <h3>Platinado</h3>
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Platinado</h3>
+                        </div>
                     </div>
-                    <div class="service-price">R$ 120,00</div>
-                    <div class="service-check">✓</div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 120,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1086,7 +1134,7 @@
             
             <div id="timeSection" style="display: none; margin-top: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="font-weight: 400; letter-spacing: 2px; text-transform: uppercase; font-size: 14px;">Horários</h3>
+                    <h3 style="font-weight: 400; letter-spacing: 2px; text-transform: uppercase; font-size: 14px;">Horários Disponíveis</h3>
                     <span id="selectedDateText" style="color: var(--cimento); font-size: 13px;"></span>
                 </div>
                 <div class="time-grid" id="timeGrid"></div>
@@ -1138,7 +1186,7 @@
         <!-- STEP 4: SUCCESS -->
         <div class="step" id="step-success">
             <div style="text-align: center; padding: 60px 20px;">
-                <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-size: 50px; animation: scaleIn 0.5s ease;">
+                <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-size: 50px;">
                     ✓
                 </div>
                 <h2 class="step-title" style="margin-bottom: 15px;">Agendado!</h2>
@@ -1242,17 +1290,9 @@
         let currentMonth = new Date();
         let isAdmin = false;
         
-        const SERVICES_DATA = {
-            corte: { name: 'Corte', price: 30 },
-            navalhado: { name: 'Navalhado', price: 30 },
-            barba: { name: 'Barba', price: 30 },
-            sombra: { name: 'Sombra', price: 5 },
-            cortebarba: { name: 'Corte + Barba', price: 55 },
-            paifilho: { name: 'Pai & Filho', price: 55 },
-            alisamento: { name: 'Alisamento', price: 50 },
-            luzes: { name: 'Luzes', price: 100 },
-            platinado: { name: 'Platinado', price: 120 }
-        };
+        // SIMULAÇÃO DE BANCO DE DADOS COMPARTILHADO
+        // Usando localStorage comum para TODOS verem os mesmos agendamentos
+        const DB_KEY = 'hugo_barber_bookings_v1';
         
         const TIME_SLOTS = [
             '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -1267,13 +1307,11 @@
                 document.getElementById('app').classList.add('active');
             }, 2500);
             
-            // Request notification permission
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission();
             }
             
-            // Clean old appointments daily
-            cleanOldAppointments();
+            cleanOldBookings();
         };
         
         // SERVICES
@@ -1333,12 +1371,10 @@
             const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
             let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
             
-            // Padding
             for (let i = 0; i < startPadding; i++) {
                 html += '<div class="calendar-day disabled"></div>';
             }
             
-            // Days
             const today = new Date();
             today.setHours(0,0,0,0);
             
@@ -1371,7 +1407,7 @@
             renderTimeSlots();
         }
         
-        // TIME SLOTS
+        // TIME SLOTS - AQUI ESTÁ A MÁGICA DO COMPARTILHAMENTO
         function renderTimeSlots() {
             const section = document.getElementById('timeSection');
             const grid = document.getElementById('timeGrid');
@@ -1382,10 +1418,12 @@
                 weekday: 'short', day: 'numeric', month: 'short' 
             });
             
-            // Get booked times
-            const bookings = getAllBookings();
+            // PEGA TODOS OS AGENDAMENTOS DO BANCO COMPARTILHADO
+            const allBookings = getSharedBookings();
             const dateStr = selectedDate.toDateString();
-            const bookedTimes = bookings
+            
+            // FILTRA HORÁRIOS JÁ OCUPADOS
+            const bookedTimes = allBookings
                 .filter(b => b.date === dateStr && b.status === 'active')
                 .map(b => b.time);
             
@@ -1394,15 +1432,13 @@
                 const isSelected = selectedTime === time;
                 
                 let classes = 'time-slot';
-                if (isBooked) classes += ' disabled';
+                if (isBooked) {
+                    classes += ' disabled';
+                }
                 if (isSelected) classes += ' selected';
                 
                 return `<div class="${classes}" onclick="${isBooked ? '' : `selectTime('${time}')`}">${time}</div>`;
             }).join('');
-            
-            if (selectedTime) {
-                setTimeout(() => goToData(), 300);
-            }
         }
         
         function selectTime(time) {
@@ -1434,7 +1470,7 @@
             renderTimeSlots();
         }
         
-        // CONFIRM BOOKING
+        // CONFIRM BOOKING - SALVA NO BANCO COMPARTILHADO
         function confirmBooking() {
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
@@ -1444,13 +1480,26 @@
                 return;
             }
             
+            // Verifica se horário ainda está disponível (evita race condition)
+            const allBookings = getSharedBookings();
+            const dateStr = selectedDate.toDateString();
+            const isTimeTaken = allBookings.some(b => 
+                b.date === dateStr && b.time === selectedTime && b.status === 'active'
+            );
+            
+            if (isTimeTaken) {
+                showToast('Este horário acabou de ser reservado. Escolha outro.');
+                renderTimeSlots();
+                return;
+            }
+            
             const clientId = getClientId();
             const booking = {
-                id: Date.now().toString(),
+                id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5),
                 clientId: clientId,
                 clientName: name,
                 clientPhone: phone,
-                date: selectedDate.toDateString(),
+                date: dateStr,
                 dateDisplay: selectedDate.toLocaleDateString('pt-BR'),
                 time: selectedTime,
                 services: selectedServices,
@@ -1460,25 +1509,37 @@
                 timestamp: selectedDate.getTime() + parseTime(selectedTime)
             };
             
-            // Save to my appointments
+            // SALVA NO BANCO COMPARTILHADO (TODOS VÊEM)
+            allBookings.push(booking);
+            saveSharedBookings(allBookings);
+            
+            // Salva referência local do cliente
             const myAppointments = getMyAppointments();
             myAppointments.push(booking);
-            localStorage.setItem(`hugo_${clientId}`, JSON.stringify(myAppointments));
+            localStorage.setItem(`hugo_my_${clientId}`, JSON.stringify(myAppointments));
             
-            // Save to global bookings (for admin)
-            const allBookings = getAllBookings();
-            allBookings.push(booking);
-            localStorage.setItem('hugo_all_bookings', JSON.stringify(allBookings));
-            
-            // Notify admin
+            // Notifica admin
             notifyAdmin(booking);
             
             showStep('success');
         }
         
-        function parseTime(timeStr) {
-            const [hours, minutes] = timeStr.split(':').map(Number);
-            return (hours * 60 + minutes) * 60 * 1000;
+        // BANCO DE DADOS COMPARTILHADO
+        function getSharedBookings() {
+            try {
+                return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+            } catch(e) {
+                return [];
+            }
+        }
+        
+        function saveSharedBookings(bookings) {
+            localStorage.setItem(DB_KEY, JSON.stringify(bookings));
+        }
+        
+        function getMyAppointments() {
+            const clientId = getClientId();
+            return JSON.parse(localStorage.getItem(`hugo_my_${clientId}`) || '[]');
         }
         
         function getClientId() {
@@ -1490,25 +1551,18 @@
             return id;
         }
         
-        function getMyAppointments() {
-            const clientId = getClientId();
-            return JSON.parse(localStorage.getItem(`hugo_${clientId}`) || '[]');
-        }
-        
-        function getAllBookings() {
-            return JSON.parse(localStorage.getItem('hugo_all_bookings') || '[]');
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return (hours * 60 + minutes) * 60 * 1000;
         }
         
         function notifyAdmin(booking) {
-            // Toast notification
-            showToast(`Novo: ${booking.clientName} - ${booking.services.map(s => s.name).join(', ')}`);
+            showToast(`Novo agendamento: ${booking.clientName}`);
             
-            // Browser notification
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification('HUgo Barber - Novo Agendamento', {
-                    body: `${booking.clientName} agendou para ${booking.dateDisplay} às ${booking.time}`,
-                    icon: 'logo.png',
-                    badge: 'logo.png'
+                    body: `${booking.clientName} - ${booking.dateDisplay} às ${booking.time}`,
+                    icon: 'logo.png'
                 });
             }
         }
@@ -1562,14 +1616,16 @@
             if (!confirm('Cancelar este agendamento?')) return;
             
             const clientId = getClientId();
-            let appointments = getMyAppointments();
-            appointments = appointments.map(a => a.id === id ? { ...a, status: 'cancelled' } : a);
-            localStorage.setItem(`hugo_${clientId}`, JSON.stringify(appointments));
             
-            // Update global
-            let all = getAllBookings();
+            // Atualiza banco compartilhado
+            let all = getSharedBookings();
             all = all.map(a => a.id === id ? { ...a, status: 'cancelled' } : a);
-            localStorage.setItem('hugo_all_bookings', JSON.stringify(all));
+            saveSharedBookings(all);
+            
+            // Atualiza meus agendamentos
+            let mine = getMyAppointments();
+            mine = mine.map(a => a.id === id ? { ...a, status: 'cancelled' } : a);
+            localStorage.setItem(`hugo_my_${clientId}`, JSON.stringify(mine));
             
             renderMyAppointmentsList();
             showToast('Agendamento cancelado');
@@ -1579,61 +1635,59 @@
             const app = getMyAppointments().find(a => a.id === id);
             if (!app) return;
             
-            // Load data
             selectedServices = app.services;
             selectedDate = new Date(app.date);
             selectedTime = app.time;
             
-            // Update UI
             document.querySelectorAll('.service-card').forEach(card => {
                 card.classList.remove('selected');
             });
             selectedServices.forEach(s => {
-                const card = document.querySelector(`[onclick*="'${s.id}'"]`);
-                if (card) card.classList.add('selected');
+                const cards = document.querySelectorAll('.service-card');
+                cards.forEach(card => {
+                    if (card.innerHTML.includes(s.name)) {
+                        card.classList.add('selected');
+                    }
+                });
             });
             updateSelectionBar();
             
             document.getElementById('clientName').value = app.clientName;
             document.getElementById('clientPhone').value = app.clientPhone || '';
             
-            // Mark for update
             localStorage.setItem('hugo_editing', id);
-            
             showStep('services');
         }
         
-        // CLEAN OLD APPOINTMENTS
-        function cleanOldAppointments() {
+        // CLEAN OLD
+        function cleanOldBookings() {
             const now = new Date();
             now.setHours(0,0,0,0);
             
-            // Clean my appointments
-            const clientId = getClientId();
-            let mine = getMyAppointments();
-            mine = mine.map(a => {
-                const appDate = new Date(a.date);
-                appDate.setHours(0,0,0,0);
-                if (appDate < now && a.status === 'active') {
-                    return { ...a, status: 'completed' };
-                }
-                return a;
-            });
-            localStorage.setItem(`hugo_${clientId}`, JSON.stringify(mine));
-            
-            // Clean global (remove completed older than 1 day)
-            let all = getAllBookings();
+            let all = getSharedBookings();
             const yesterday = new Date(now);
             yesterday.setDate(yesterday.getDate() - 1);
             
-            all = all.filter(a => {
-                if (a.status === 'completed') {
-                    const appDate = new Date(a.date);
-                    return appDate >= yesterday;
+            // Marca como completed se passou
+            all = all.map(b => {
+                const bDate = new Date(b.date);
+                bDate.setHours(0,0,0,0);
+                if (bDate < now && b.status === 'active') {
+                    return { ...b, status: 'completed' };
+                }
+                return b;
+            });
+            
+            // Remove completados antigos (mais de 1 dia)
+            all = all.filter(b => {
+                if (b.status === 'completed') {
+                    const bDate = new Date(b.date);
+                    return bDate >= yesterday;
                 }
                 return true;
             });
-            localStorage.setItem('hugo_all_bookings', JSON.stringify(all));
+            
+            saveSharedBookings(all);
         }
         
         // NAVIGATION
@@ -1702,25 +1756,25 @@
         }
         
         function renderAdminPanel() {
-            const all = getAllBookings().filter(b => b.status === 'active');
+            const all = getSharedBookings();
+            const active = all.filter(b => b.status === 'active');
             const today = new Date().toDateString();
-            const todayCount = all.filter(b => b.date === today).length;
+            const todayCount = active.filter(b => b.date === today).length;
             
-            document.getElementById('statActive').textContent = all.length;
+            document.getElementById('statActive').textContent = active.length;
             document.getElementById('statToday').textContent = todayCount;
             
             const list = document.getElementById('adminList');
             const now = new Date().getTime();
             
-            // Sort by date/time
-            all.sort((a, b) => a.timestamp - b.timestamp);
+            active.sort((a, b) => a.timestamp - b.timestamp);
             
-            if (all.length === 0) {
+            if (active.length === 0) {
                 list.innerHTML = '<div style="text-align: center; color: var(--cimento); padding: 40px;">Nenhum agendamento ativo</div>';
                 return;
             }
             
-            list.innerHTML = all.map(b => {
+            list.innerHTML = active.map(b => {
                 const isPast = b.timestamp < now;
                 return `
                     <div class="admin-item ${isPast ? 'completed' : ''}">
@@ -1730,7 +1784,7 @@
                         </div>
                         <div class="admin-item-services">${b.services.map(s => s.name).join(', ')}</div>
                         <div class="admin-item-price">R$ ${b.total.toFixed(2).replace('.', ',')}</div>
-                        ${b.clientPhone ? `<div style="margin-top: 8px; font-size: 12px; color: var(--cimento);">${b.clientPhone}</div>` : ''}
+                        ${b.clientPhone ? `<div style="margin-top: 8px; font-size: 12px; color: var(--cimento);">📱 ${b.clientPhone}</div>` : ''}
                     </div>
                 `;
             }).join('');
@@ -1740,7 +1794,6 @@
             document.getElementById(id).classList.remove('active');
         }
         
-        // UTILS
         function showToast(text) {
             const toast = document.getElementById('notification');
             document.getElementById('notificationText').textContent = text;
@@ -1761,15 +1814,13 @@
             }
         }
         
-        // Close modals on outside click
         window.onclick = function(e) {
             if (e.target.classList.contains('modal')) {
                 e.target.classList.remove('active');
             }
         }
         
-        // Auto clean every hour
-        setInterval(cleanOldAppointments, 3600000);
+        setInterval(cleanOldBookings, 60000); // Limpa a cada minuto
     </script>
 </body>
 </html>
