@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
         
-        /* SPLASH SCREEN */
         .splash {
             position: fixed;
             top: 0;
@@ -79,7 +78,6 @@
             to { opacity: 0.5; }
         }
         
-        /* APP */
         .app {
             display: none;
             min-height: 100vh;
@@ -90,7 +88,6 @@
             display: block;
         }
         
-        /* HEADER */
         .header {
             background: rgba(45, 45, 45, 0.98);
             backdrop-filter: blur(10px);
@@ -122,7 +119,6 @@
             text-transform: uppercase;
         }
         
-        /* CONNECTION STATUS */
         .connection-status {
             position: fixed;
             top: 20px;
@@ -141,7 +137,6 @@
             box-shadow: 0 0 10px #ef4444;
         }
         
-        /* ADMIN TRIGGER */
         .admin-trigger {
             position: fixed;
             top: 20px;
@@ -162,7 +157,6 @@
             background: rgba(255,255,255,0.1);
         }
         
-        /* STEPS */
         .step {
             display: none;
             padding: 25px 20px;
@@ -180,17 +174,15 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* STEP SERVICES - COM ESPAÇO PARA A FAIXA */
         #step-services {
-            padding-bottom: 160px; /* Espaço para a faixa branca */
+            padding-bottom: 160px;
         }
         
-        /* OUTRAS STEPS - SEM FAIXA, ESPAÇO NORMAL */
         #step-calendar,
         #step-data,
         #step-success,
         #step-appointments {
-            padding-bottom: 120px; /* Só espaço para o menu inferior */
+            padding-bottom: 120px;
         }
         
         .step-header {
@@ -211,7 +203,6 @@
             letter-spacing: 1px;
         }
         
-        /* SERVICES */
         .services-list {
             display: flex;
             flex-direction: column;
@@ -303,17 +294,16 @@
             font-size: 13px;
         }
         
-        /* SELECTION BAR - APENAS NA TELA DE SERVIÇOS */
         .selection-bar {
             position: fixed;
-            bottom: 90px; /* Acima do menu */
+            bottom: 90px;
             left: 20px;
             right: 20px;
             background: rgba(245, 245, 245, 0.98);
             color: var(--preto);
             padding: 18px 25px;
             border-radius: 20px;
-            display: none; /* Escondida por padrão */
+            display: none;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 10px 40px rgba(0,0,0,0.4);
@@ -323,19 +313,8 @@
             margin: 0 auto;
         }
         
-        /* Mostra a faixa SÓ quando a step-services está ativa */
-        #step-services.active ~ .selection-bar,
-        #step-services.active .selection-bar,
         .selection-bar.active {
             display: flex;
-        }
-        
-        /* Força esconder em outras telas */
-        #step-calendar.active ~ .selection-bar,
-        #step-data.active ~ .selection-bar,
-        #step-success.active ~ .selection-bar,
-        #step-appointments.active ~ .selection-bar {
-            display: none !important;
         }
         
         .selection-info {
@@ -374,7 +353,6 @@
             transform: scale(1.05);
         }
         
-        /* CALENDAR */
         .calendar-wrapper {
             background: rgba(255,255,255,0.02);
             border-radius: 24px;
@@ -462,7 +440,6 @@
             border-color: rgba(255,255,255,0.3);
         }
         
-        /* TIME SLOTS */
         .time-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -502,7 +479,6 @@
             color: #ff8888;
         }
         
-        /* FORM */
         .form-group {
             margin-bottom: 25px;
         }
@@ -533,7 +509,6 @@
             background: rgba(255,255,255,0.08);
         }
         
-        /* SUMMARY */
         .summary-box {
             background: rgba(255,255,255,0.04);
             border-radius: 24px;
@@ -594,7 +569,6 @@
             font-weight: 600;
         }
         
-        /* BUTTONS */
         .btn-primary {
             width: 100%;
             padding: 22px;
@@ -636,7 +610,6 @@
             border-color: rgba(255,255,255,0.3);
         }
         
-        /* APPOINTMENTS */
         .appointments-list {
             display: flex;
             flex-direction: column;
@@ -760,7 +733,6 @@
             background: rgba(220, 38, 38, 0.15);
         }
         
-        /* EMPTY STATE */
         .empty-state {
             text-align: center;
             padding: 80px 20px;
@@ -780,7 +752,6 @@
             opacity: 0.5;
         }
         
-        /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -826,7 +797,6 @@
             opacity: 1;
         }
         
-        /* MODALS */
         .modal {
             display: none;
             position: fixed;
@@ -888,7 +858,6 @@
             padding: 28px;
         }
         
-        /* ADMIN PANEL */
         .admin-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1004,7 +973,6 @@
             font-size: 12px;
         }
         
-        /* LOADING */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1051,21 +1019,17 @@
 </head>
 <body>
 
-    <!-- SPLASH SCREEN -->
     <div class="splash" id="splash">
         <img src="logo.png" alt="HUgo Barber" class="splash-logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>'">
         <div class="splash-text">HUgo Barber</div>
     </div>
 
-    <!-- CONNECTION STATUS -->
     <div class="connection-status" id="connectionStatus" title="Conectado"></div>
 
-    <!-- LOADING -->
     <div class="loading-overlay" id="loading">
         <div class="spinner"></div>
     </div>
 
-    <!-- APP -->
     <div class="app" id="app">
         <div class="admin-trigger" onclick="openAdminLogin()"></div>
 
@@ -1074,7 +1038,6 @@
             <p>Barber Shop</p>
         </div>
 
-        <!-- STEP 1: SERVICES -->
         <div class="step active" id="step-services">
             <div class="step-header">
                 <h2 class="step-title">Serviços</h2>
@@ -1192,7 +1155,6 @@
             </div>
         </div>
 
-        <!-- STEP 2: CALENDAR -->
         <div class="step" id="step-calendar">
             <div class="step-header">
                 <h2 class="step-title">Agendar</h2>
@@ -1219,7 +1181,6 @@
             <button class="btn-secondary" onclick="backToServices()" style="margin-top: 25px;">← Voltar aos Serviços</button>
         </div>
 
-        <!-- STEP 3: DATA -->
         <div class="step" id="step-data">
             <div class="step-header">
                 <h2 class="step-title">Confirmar</h2>
@@ -1259,7 +1220,6 @@
             <button class="btn-secondary" onclick="backToCalendar()">← Voltar</button>
         </div>
 
-        <!-- STEP 4: SUCCESS -->
         <div class="step" id="step-success">
             <div style="text-align: center; padding: 60px 20px;">
                 <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-size: 50px;">
@@ -1274,7 +1234,6 @@
             </div>
         </div>
 
-        <!-- STEP 5: MY APPOINTMENTS -->
         <div class="step" id="step-appointments">
             <div class="step-header">
                 <h2 class="step-title">Meus Cortes</h2>
@@ -1286,7 +1245,6 @@
             <button class="btn-primary" onclick="newBooking()" style="margin-top: 10px;">Novo Agendamento</button>
         </div>
 
-        <!-- SELECTION BAR - FORA DAS STEPS, APARECE SÓ EM SERVIÇOS -->
         <div class="selection-bar" id="selectionBar">
             <div class="selection-info">
                 <div class="selection-count" id="selectionCount">0 serviços</div>
@@ -1295,7 +1253,6 @@
             <button class="btn-continue" onclick="goToCalendar()">Continuar</button>
         </div>
 
-        <!-- BOTTOM NAV -->
         <div class="bottom-nav">
             <button class="nav-item active" onclick="switchNav('services')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1315,7 +1272,6 @@
         </div>
     </div>
 
-    <!-- ADMIN LOGIN MODAL -->
     <div class="modal" id="adminLoginModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1332,7 +1288,6 @@
         </div>
     </div>
 
-    <!-- ADMIN PANEL MODAL -->
     <div class="modal" id="adminPanelModal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
@@ -1361,24 +1316,22 @@
         </div>
     </div>
 
-    <!-- NOTIFICATION -->
     <div class="notification-toast" id="notification">
         <div class="notification-icon">✓</div>
         <span id="notificationText">Novo agendamento!</span>
     </div>
 
     <script>
-        // FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "AIzaSyDummyKeyForDemo123456789",
-            authDomain: "hugo-barber-demo.firebaseapp.com",
-            databaseURL: "https://hugo-barber-demo-default-rtdb.firebaseio.com",
-            projectId: "hugo-barber-demo",
-            storageBucket: "hugo-barber-demo.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef123456"
+            apiKey: "AIzaSyAecPiyC6k5EgxocKM0-bSq-DsLL8w1BL0",
+            authDomain: "barbearia-123.firebaseapp.com",
+            databaseURL: "https://barbearia-123-default-rtdb.firebaseio.com",
+            projectId: "barbearia-123",
+            storageBucket: "barbearia-123.firebasestorage.app",
+            messagingSenderId: "194342702201",
+            appId: "1:194342702201:web:99ee94a8417c80852858a8"
         };
-        
+                
         let app, database, bookingsRef;
         let allBookings = [];
         let selectedServices = [];
@@ -1463,7 +1416,6 @@
             const count = document.getElementById('selectionCount');
             const price = document.getElementById('selectionPrice');
             
-            // Só mostra a faixa se estiver na tela de serviços e tiver seleção
             const isServicesActive = document.getElementById('step-services').classList.contains('active');
             
             if (selectedServices.length > 0 && isServicesActive) {
@@ -1478,7 +1430,6 @@
         
         function goToCalendar() {
             if (selectedServices.length === 0) return;
-            // Esconde a faixa ao mudar de tela
             document.getElementById('selectionBar').classList.remove('active');
             showStep('calendar');
             renderCalendar();
@@ -1486,7 +1437,6 @@
         
         function backToServices() {
             showStep('services');
-            // Mostra a faixa novamente se tiver seleção
             updateSelectionBar();
         }
         
@@ -1790,7 +1740,6 @@
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
             
-            // Controla visibilidade da faixa de seleção
             const selectionBar = document.getElementById('selectionBar');
             if (step === 'services' && selectedServices.length > 0) {
                 selectionBar.classList.add('active');
@@ -1805,12 +1754,10 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             event.currentTarget.classList.add('active');
             
-            // Sempre esconde a faixa ao trocar de aba pelo menu
             document.getElementById('selectionBar').classList.remove('active');
             
             if (nav === 'services') {
                 showStep('services');
-                // Mostra faixa se tiver seleção
                 if (selectedServices.length > 0) {
                     document.getElementById('selectionBar').classList.add('active');
                 }
