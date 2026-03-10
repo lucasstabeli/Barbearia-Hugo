@@ -107,10 +107,6 @@
             color: var(--branco);
         }
         
-        .header span {
-            font-weight: 600;
-        }
-        
         .connection-status {
             position: fixed;
             top: 20px;
@@ -1027,7 +1023,7 @@
         <div class="admin-trigger" onclick="openAdminLogin()"></div>
 
         <div class="header">
-            <h1><span>HU</span>go Barber</h1>
+            <h1>HUGO BARBER</h1>
         </div>
 
         <div class="step active" id="step-services">
@@ -1350,11 +1346,12 @@
             '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', 
             '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
         ];
-
+        
         // Domingo: 08:00 às 14:00 (de 1 em 1 hora)
         const SUNDAY_SLOTS = [
             '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'
         ];
+        
         window.onload = function() {
             myClientId = getClientId();
             
