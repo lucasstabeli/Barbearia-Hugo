@@ -111,14 +111,6 @@
             font-weight: 600;
         }
         
-        .header p {
-            font-size: 10px;
-            color: var(--cimento);
-            margin-top: 8px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-        
         .connection-status {
             position: fixed;
             top: 20px;
@@ -175,7 +167,7 @@
         }
         
         #step-services {
-            padding-bottom: 160px;
+            padding-bottom: 200px;
         }
         
         #step-calendar,
@@ -207,6 +199,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-bottom: 40px;
         }
         
         .service-card {
@@ -1034,8 +1027,7 @@
         <div class="admin-trigger" onclick="openAdminLogin()"></div>
 
         <div class="header">
-            <h1><span>HU</span>go</h1>
-            <p>Barber Shop</p>
+            <h1><span>HU</span>go Barber</h1>
         </div>
 
         <div class="step active" id="step-services">
@@ -1057,14 +1049,14 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="toggleService('navalhado', 30, 'Navalhado')">
+                <div class="service-card" onclick="toggleService('navalhado', 35, 'Navalhado')">
                     <div class="service-left">
                         <div class="service-info">
                             <h3>Navalhado</h3>
                         </div>
                     </div>
                     <div class="service-right">
-                        <div class="service-price">R$ 30,00</div>
+                        <div class="service-price">R$ 35,00</div>
                         <div class="service-check">✓</div>
                     </div>
                 </div>
@@ -1113,6 +1105,18 @@
                     </div>
                     <div class="service-right">
                         <div class="service-price">R$ 55,00</div>
+                        <div class="service-check">✓</div>
+                    </div>
+                </div>
+                
+                <div class="service-card" onclick="toggleService('crianca', 35, 'Corte Criança -2 anos')">
+                    <div class="service-left">
+                        <div class="service-info">
+                            <h3>Corte Criança -2 anos</h3>
+                        </div>
+                    </div>
+                    <div class="service-right">
+                        <div class="service-price">R$ 35,00</div>
                         <div class="service-check">✓</div>
                     </div>
                 </div>
@@ -1341,12 +1345,16 @@
         let isAdmin = false;
         let myClientId = null;
         
-        const TIME_SLOTS = [
-            '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-            '12:00', '13:00', '13:30', '14:00', '14:30', '15:00', 
-            '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+        // Segunda a Sábado: 08:00 às 19:00 (de 1 em 1 hora)
+        const WEEKDAY_SLOTS = [
+            '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', 
+            '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
         ];
-        
+
+        // Domingo: 08:00 às 14:00 (de 1 em 1 hora)
+        const SUNDAY_SLOTS = [
+            '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'
+        ];
         window.onload = function() {
             myClientId = getClientId();
             
@@ -1502,12 +1510,18 @@
             });
             
             const dateStr = selectedDate.toDateString();
+            const dayOfWeek = selectedDate.getDay();
+            const isSunday = dayOfWeek === 0;
+            
+            // Se for domingo, usa horários reduzidos (até 14h)
+            // Se for segunda(1) a sábado(6), usa horários completos
+            const availableSlots = isSunday ? SUNDAY_SLOTS : WEEKDAY_SLOTS;
             
             const bookedTimes = allBookings
                 .filter(b => b.date === dateStr && b.status === 'active')
                 .map(b => b.time);
             
-            grid.innerHTML = TIME_SLOTS.map(time => {
+            grid.innerHTML = availableSlots.map(time => {
                 const isBooked = bookedTimes.includes(time);
                 const isSelected = selectedTime === time;
                 
