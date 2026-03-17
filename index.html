@@ -1050,6 +1050,7 @@
             border-radius: 3px;
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -1396,6 +1397,221 @@
         let selectedTime = null;
         let currentMonth = new Date();
         let isAdmin = false;
+        // ===== NOTIFICAÇÕES NATIVAS (SEM CONTA, 100% GRÁTIS) =====
+        let audioContext = null;
+        let lastBookingCount = 0;
+        let isListening = false;
+        let notificationPermission = false;
+
+        // Inicializar sistema de notificações
+        function initNotifications() {
+            // Criar contexto de áudio (precisa de interação do usuário primeiro)
+            document.addEventListener('click', () => {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }, { once: true });
+
+            // Solicitar permissão para notificações nativas
+            requestNotificationPermission();
+        }
+
+        // Solicitar permissão de notificações
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) return;
+
+            const permission = await Notification.requestPermission();
+            notificationPermission = permission === 'granted';
+
+            if (notificationPermission) {
+                console.log('Notificações permitidas');
+            }
+        }
+
+        // Tocar som de alerta (beep estilo barbearia)
+        function playAlertSound() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            try {
+                const now = audioContext.currentTime;
+
+                // Criar osciladores para som de "ding-dong" estilo barbearia
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(audioContext.destination);
+
+                // Primeiro tom (alto)
+                osc1.frequency.setValueAtTime(880, now); // A5
+                osc1.frequency.exponentialRampToValueAtTime(440, now + 0.1);
+
+                // Segundo tom (baixo)
+                osc2.frequency.setValueAtTime(698.46, now + 0.1); // F5
+                osc2.frequency.exponentialRampToValueAtTime(349.23, now + 0.2);
+
+                // Envelope
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+                osc1.start(now);
+                osc1.stop(now + 0.5);
+                osc2.start(now + 0.1);
+                osc2.stop(now + 0.6);
+
+                // Terceiro tom de confirmação
+                setTimeout(() => {
+                    const osc3 = audioContext.createOscillator();
+                    const gain3 = audioContext.createGain();
+                    osc3.connect(gain3);
+                    gain3.connect(audioContext.destination);
+
+                    osc3.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    gain3.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                    osc3.start();
+                    osc3.stop(audioContext.currentTime + 0.3);
+                }, 400);
+
+            } catch (e) {
+                console.log('Erro ao tocar som:', e);
+            }
+        }
+
+        // Mostrar notificação nativa do sistema
+        function showNativeNotification(booking) {
+            if (!notificationPermission || !('Notification' in window)) return;
+
+            const title = '✂️ HUgo Barber - Novo Agendamento!';
+            const options = {
+                body: `${booking.clientName} marcou para ${booking.dateDisplay} às ${booking.time}`,
+                icon: 'logo.png',
+                badge: 'logo.png',
+                tag: 'hugo-barber-' + booking.id,
+                requireInteraction: true,
+                vibrate: [200, 100, 200],
+                data: {
+                    bookingId: booking.id,
+                    url: window.location.href
+                },
+                actions: [
+                    { action: 'open', title: 'Ver Agendamento' },
+                    { action: 'close', title: 'Fechar' }
+                ]
+            };
+
+            try {
+                const notification = new Notification(title, options);
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+
+                // Vibração no celular
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200, 100, 200]);
+                }
+
+            } catch (e) {
+                console.log('Erro na notificação:', e);
+            }
+        }
+
+        // Escutar novos agendamentos em tempo real (modo "radio")
+        function startListeningBookings() {
+            if (!bookingsRef || isListening) return;
+
+            isListening = true;
+            console.log('🔔 Modo notificação ativo - escutando novos agendamentos');
+
+            // Contar agendamentos atuais
+            bookingsRef.once('value', (snapshot) => {
+                const data = snapshot.val();
+                lastBookingCount = data ? Object.keys(data).length : 0;
+            });
+
+            // Escutar mudanças
+            bookingsRef.on('child_added', (snapshot) => {
+                const booking = snapshot.val();
+
+                // Só notificar se for agendamento novo (não carregamento inicial)
+                if (booking && booking.createdAt) {
+                    const createdTime = new Date(booking.createdAt).getTime();
+                    const now = Date.now();
+                    const diffSeconds = (now - createdTime) / 1000;
+
+                    // Se foi criado nos últimos 5 segundos, é novo
+                    if (diffSeconds < 5) {
+                        console.log('🎉 Novo agendamento detectado:', booking.clientName);
+
+                        // Tocar som
+                        playAlertSound();
+
+                        // Mostrar notificação nativa
+                        showNativeNotification(booking);
+
+                        // Mostrar toast também
+                        showToast(`📅 Novo: ${booking.clientName} - ${booking.time}`);
+                    }
+                }
+            });
+        }
+
+        // Parar de escutar
+        function stopListeningBookings() {
+            isListening = false;
+            if (bookingsRef) {
+                bookingsRef.off('child_added');
+            }
+            console.log('🔕 Modo notificação desativado');
+        }
+
+        // Toggle do modo notificação
+        async function toggleNotifications() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (isListening) {
+                stopListeningBookings();
+                showToast('🔕 Notificações desativadas');
+            } else {
+                // Solicitar permissão se ainda não tiver
+                if (!notificationPermission && 'Notification' in window) {
+                    await requestNotificationPermission();
+                }
+
+                startListeningBookings();
+                showToast('🔔 Notificações ativadas! Deixe a aba aberta.');
+
+                // Tocar som de teste
+                setTimeout(playAlertSound, 500);
+            }
+
+            updateNotificationButton();
+        }
+
+        // Atualizar botão
+        function updateNotificationButton() {
+            const btn = document.getElementById('btnNotifications');
+            if (btn) {
+                btn.textContent = isListening ? '🔔 Notificações Ativas (escutando...)' : '🔕 Ativar Notificações';
+                btn.style.background = isListening ? 'rgba(74, 222, 128, 0.2)' : 'transparent';
+                btn.style.borderColor = isListening ? 'rgba(74, 222, 128, 0.5)' : 'rgba(255,255,255,0.15)';
+                btn.style.color = isListening ? '#4ade80' : 'var(--branco)';
+            }
+        }
+
+        // ===== FIM NOTIFICAÇÕES =====
+
+
         let myClientId = null;
         
         // Segunda a Sábado: 08:00 às 19:00 (de 1 em 1 hora)
@@ -1411,6 +1627,7 @@
         
         window.onload = function() {
             myClientId = getClientId();
+            initNotifications();
             
             try {
                 app = firebase.initializeApp(firebaseConfig);
@@ -1700,6 +1917,14 @@
                 localStorage.setItem(`hugo_my_${myClientId}`, JSON.stringify(myAppointments));
                 
                 notifyAdmin(booking);
+
+                // Se estiver no painel admin, tocar som imediatamente
+                if (isListening) {
+                    setTimeout(() => {
+                        playAlertSound();
+                        showNativeNotification(booking);
+                    }, 500);
+                }
                 showLoading(false);
                 showStep('success');
                 
